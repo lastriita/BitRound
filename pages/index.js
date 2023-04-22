@@ -5,6 +5,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme.js';
 import CampaignCard from '../components/CardRound';
 import BitRound from "../ethereum/bitRound";
+import { Typography } from '@mui/material';
+import { Link } from '../routes'
+import Header from "../components/Header";
+import { Container } from "semantic-ui-react";
 
 class BitRoundIndex extends Component {
     static async getInitialProps() {
@@ -26,8 +30,6 @@ class BitRoundIndex extends Component {
             })
         );
 
-        console.log(items)
-
         return { items };
     }
 
@@ -41,7 +43,7 @@ class BitRoundIndex extends Component {
                 roundNumber: bitRound.roundNumber,
                 token: bitRound.token
             }
-            return <CampaignCard color="primary" key={index} {...item} />
+            return <Link route={`/bitRound/${bitRound.address}`}><CampaignCard color="primary" key={index} {...item} /></Link>
         });
 
         return items
@@ -52,9 +54,18 @@ class BitRoundIndex extends Component {
         return (
             <ThemeProvider theme={theme}>
                 <Layout>
-                    <div>
-                        {this.renderCampaigns()}
-                    </div>
+                <ThemeProvider theme={theme}>
+                    <Typography variant="h2" component="h1" gutterBottom>
+                    Welcome to BitRound
+                    </Typography>
+                </ThemeProvider>
+                <Container>
+                    <Header></Header>
+                        <div>
+                            {this.renderCampaigns()}
+                        </div>
+                        
+                </Container>
                 </Layout>
             </ThemeProvider>
         );

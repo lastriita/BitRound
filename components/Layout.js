@@ -3,7 +3,6 @@ import { Container } from "semantic-ui-react";
 import Head from 'next/head';
 import Header from './Header';
 import { Box } from '@mui/material';
-import { Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme2.js';
 
@@ -21,11 +20,6 @@ const Layout = (props) => {
             justifyContent: 'center', // Center elements vertically
           }}
         >
-          <ThemeProvider theme={theme}>
-            <Typography variant="h2" component="h1" gutterBottom>
-              Welcome to BitRound
-            </Typography>
-          </ThemeProvider>
             <Container>
                 <Head>
                     <link
@@ -35,11 +29,10 @@ const Layout = (props) => {
                     />
                     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
                 </Head>
-
-                <Header></Header>
-                {props.children}
+                
             
             </Container>
+            {props.children}
         </Box>
     );
 };
