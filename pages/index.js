@@ -1,38 +1,62 @@
 import { React, Component } from "react";
 import factory from '../ethereum/factory';import 
 Layout from "../components/Layout";
-import { Card, Button } from 'semantic-ui-react';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../components/theme.js';
+import CampaignCard from '../components/CardRound';
+import BitRound from "../ethereum/bitRound";
 
 class BitRoundIndex extends Component {
     static async getInitialProps() {
         const campaigns = await factory.methods.getDeployedCampaigns().call();
-        console.log(campaigns);
+        
+        const items = await Promise.all(
+            campaigns.map(async (address, index) => {
+                const campaign = BitRound(address);
+                const summary = await campaign.methods.getSummary().call();
+                const item = {
+                    title: 'Titulo',
+                    minInvestment: summary[1],
+                    totalInvestment: summary[0],
+                    address: address,
+                    roundNumber: summary[4],
+                    token: summary[6],
+                };
+                return item;
+            })
+        );
 
-        return { campaigns };
+        console.log(items)
+
+        return { items };
     }
 
     renderCampaigns() {
-        const items = this.props.campaigns.map(address => {
-            return {
-                header: address,
-                description: (<div>
-                    Campaña
-                </div>
-                ),
-                fluid: true
+        const items = this.props.items.map((bitRound, index) => {
+            const item = {
+                title: 'Titulo',
+                minInvestment: bitRound.minInvestment,
+                totalInvestment: bitRound.totalInvestment,
+                address: bitRound.address,
+                roundNumber: bitRound.roundNumber,
+                token: bitRound.token
             }
+            return <CampaignCard color="primary" key={index} {...item} />
         });
 
-        return <Card.Group items = {items}></Card.Group>
+        return items
     }
 
 
     render() {
         return (
-            <Layout>
-                <h1>Hola</h1> 
-                <div>{this.renderCampaigns()}</div>  
-            </Layout>
+            <ThemeProvider theme={theme}>
+                <Layout>
+                    <div>
+                        {this.renderCampaigns()}
+                    </div>
+                </Layout>
+            </ThemeProvider>
         );
     }
 }
