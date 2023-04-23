@@ -3,6 +3,7 @@ import { Card, CardContent, Typography, TextField, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import { Button, Form, Input, Message } from 'semantic-ui-react';
 import bitRound from '../ethereum/bitRound';
+import token from '../ethereum/token'
 import web3 from '../ethereum/web3';
 
 const StyledCard = styled(Card)`
@@ -25,13 +26,26 @@ const CardOuterContainer = styled('div')`
   filter: drop-shadow(-5px 10px 5px rgba(0, 0, 0, 0.15));
 `;
 
+async function setSymbol(tokenA){
+  const tokenInterface = token(tokenA);
+  const symbol = await tokenInterface.methods.symbol().call()
+  console.log(symbol)
+  return symbol;
+}
+
 class ContributeCard extends Component {
+  async componentDidMount() {
+    const symbol = await setSymbol(this.props.token)
+    console.log(symbol)
+    this.setState({ symbol: symbol });
+  }
 
     state = {
         value: '',
         errorMessage: '',
         loading: false, 
-        success: false
+        success: false,
+        symbol: ''
     };
 
   handleAmountChange = (e) => {
@@ -42,12 +56,16 @@ class ContributeCard extends Component {
     event.preventDefault();
 
     const campaign = bitRound(this.props.address);
+    const tokenInterface = token(this.props.token);
 
     this.setState({ loading: true, errorMessage: '', success: false });
-    console.log(this.state.value)
 
     try{
         const accounts = await web3.eth.getAccounts();
+        await tokenInterface.methods.approve(this.props.address, this.state.value).send({
+          from: accounts[0],
+          gas: "3000000"
+        })
         await campaign.methods.contribute(this.state.value).send({
             from: accounts[0],
             gas: "3000000"
@@ -70,6 +88,8 @@ class ContributeCard extends Component {
                 <Form.Field>
                     <label>Contribute to BitRound</label>
                     <Input
+                    label={this.state.symbol} 
+                    labelPosition="left" 
                     style={{
                       backgroundColor: 'bce6ff',
                       color: 'bce6ff',

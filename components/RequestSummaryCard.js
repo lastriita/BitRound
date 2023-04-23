@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Card, CardContent, Typography, CircularProgress, Box, Button } from '@mui/material';
+import { Card, CardContent, Typography, CircularProgress, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import bitRound from '../ethereum/bitRound';
 import factory from '../ethereum/factory';
 import web3 from '../ethereum/web3';
+import { Button } from 'semantic-ui-react';
 
 const CircularProgressWithLabel = (props) => (
   <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -60,7 +61,8 @@ class RequestSummaryCard extends Component {
     this.state = {
       pastRoundEndTime: false,
       completed: false,
-      humanTime: ''
+      humanTime: '',
+      loading: false
     };
   }
 
@@ -71,6 +73,7 @@ class RequestSummaryCard extends Component {
   }
 
   onApprove = async () => {
+    this.setState({ loading: true })
       const campaign = bitRound(this.props.address);
 
       const accounts = await web3.eth.getAccounts();
@@ -78,10 +81,12 @@ class RequestSummaryCard extends Component {
           from: accounts[0],
           gas: "3000000"
       })
+      this.setState({ loading: false })
+      window.location.reload();
   }
 
   onRefuse = async () => {
-    console.log(this.props.address)
+    this.setState({ loading: true })
     const campaign = bitRound(this.props.address);
 
     const accounts = await web3.eth.getAccounts();
@@ -91,9 +96,12 @@ class RequestSummaryCard extends Component {
         from: accounts[0],
         gas: "3000000"
     })
+    this.setState({ loading: false })
+    window.location.reload();
   }
 
   onFinalize = async () => {
+    this.setState({ loading: true })
       const campaign = factory;
 
       const accounts = await web3.eth.getAccounts();
@@ -101,6 +109,8 @@ class RequestSummaryCard extends Component {
           from: accounts[0],
           gas: "3000000"
       })
+      this.setState({ loading: false })
+      window.location.reload();
   }
 
   render() {
@@ -119,19 +129,19 @@ class RequestSummaryCard extends Component {
             Request {index + 1}
           </Typography>
           <Typography color="text.secondary">Description: {description}</Typography>
-          <Typography color="text.secondary">Total Spending: {value}</Typography>
+          <Typography color="text.secondary">Total Spending: {value} {this.props.symbol}</Typography>
           <Typography color="text.secondary">Recipient: {recipient}</Typography>
 
           {(!pastRoundEndTime  && !completed) ? (
             <div>
-              <Button onClick={this.onApprove} variant="contained" color="success" sx={{ marginTop: '8px' }}>Approve</Button>
-              <Button onClick={this.onRefuse} variant="contained" color="error" sx={{ marginTop: '8px', marginLeft: '8px' }}>Refuse</Button>
+              <Button onClick={this.onApprove} loading={this.state.loading} variant="contained" color="green" sx={{ marginTop: '8px' }}>Approve</Button>
+              <Button onClick={this.onRefuse} loading={this.state.loading} variant="contained" color="red" sx={{ marginTop: '8px', marginLeft: '8px' }}>Refuse</Button>
             </div>
           ) : null}
           
           <Typography variant="h6" fontWeight="bold" color="text.secondary" sx={{ marginTop: '8px' }}>Request End Time: {humanTime}</Typography>
           {(!pastRoundEndTime  && !completed) ? (
-            <Button onClick={this.onFinalize} variant="contained" color="primary" sx={{ marginTop: '8px' }}>Finalize Request</Button>
+            <Button onClick={this.onFinalize} loading={this.state.loading} variant="contained" color="primary" sx={{ marginTop: '8px' }}>Finalize Request</Button>
           ) : null}
         </CardContent>
         {!completed ? (

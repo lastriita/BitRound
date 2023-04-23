@@ -22,7 +22,7 @@ const CardOuterContainer = styled('div')`
 filter: drop-shadow(-5px 10px 5px rgba(0, 0, 0, 0.15));
 `;
 
-const RoundSummaryCard = ({ roundNumber, contribution, participants }) => {
+const RoundSummaryCard = ({ roundNumber, contribution, participants, symbol }) => {
   const getRoundLetter = (index) => {
     return String.fromCharCode(64 + index); // 65 is the ASCII code for 'A'
   };
@@ -34,7 +34,7 @@ const RoundSummaryCard = ({ roundNumber, contribution, participants }) => {
         <Typography variant="h6" component="div">
           Round {getRoundLetter(roundNumber)}
         </Typography>
-        <Typography color="text.secondary">Total Contribution: {contribution}</Typography>
+        <Typography color="text.secondary">Total Contribution: {contribution} {symbol}</Typography>
         <Typography color="text.secondary">Total Participants: {participants}</Typography>
       </CardContent>
     </StyledCard>

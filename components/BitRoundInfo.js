@@ -7,9 +7,9 @@ import RequestSummaryCard from './RequestSummaryCard';
 import NewRoundCard from './NewRound';
 import theme from './theme';
 import RequestsTitle from './RequestsTitle';
+import tokenI from '../ethereum/token'
 
 function unixToHumanReadable(unixTimestamp) {
-  console.log(unixTimestamp)
   const date = new Date(unixTimestamp * 1000);
   return date.toLocaleString();
 }
@@ -17,6 +17,13 @@ function unixToHumanReadable(unixTimestamp) {
 function isRoundEndTimePast(roundEndTime) {
   const currentTime = Math.floor(Date.now() / 1000);
   return roundEndTime < currentTime;
+}
+
+async function setSymbol2(token){
+  const tokenInterface = tokenI(token);
+  const symbol = await tokenInterface.methods.symbol().call()
+  console.log(symbol)
+  return symbol;
 }
 
 const BitRoundInfo = ({
@@ -33,11 +40,18 @@ const BitRoundInfo = ({
 }) => {
   const [humanTime, setHumanTime] = useState('');
   const [pastRoundEndTime, setPastTime] = useState(false);
+  const [symbol, setSymbol] = useState('');
 
   useEffect(() => {
-    setHumanTime(unixToHumanReadable(roundEndTime));
-    setPastTime(isRoundEndTimePast(roundEndTime));
-  }, [roundEndTime]);
+    const fetchData = async () => {
+      setHumanTime(unixToHumanReadable(roundEndTime));
+      setPastTime(isRoundEndTimePast(roundEndTime));
+      const fetchedSymbol = await setSymbol2(token);
+      setSymbol(fetchedSymbol);
+    };
+
+    fetchData();
+  }, [roundEndTime, token]);
 
   return (
     <Container>
@@ -56,7 +70,7 @@ const BitRoundInfo = ({
           </Grid>
         </ThemeProvider>
         <Grid item xs={5}>
-          <ContributeCard address={address} />
+          <ContributeCard address={address} token={token} symbol={symbol}/>
         </Grid>
         {(pastRoundEndTime || rounds.length==0) ? (
           <Grid item xs={12}>
@@ -70,7 +84,7 @@ const BitRoundInfo = ({
             <Typography variant="h5" component="div" gutterBottom>
               Current Round
             </Typography>
-            <RoundSummaryCard roundNumber={rounds.length} contribution={rounds[rounds.length-1].totalContribution} participants={rounds[rounds.length-1].totalParticipants} />
+            <RoundSummaryCard symbol = {symbol} key={rounds.length-1} roundNumber={rounds.length} contribution={rounds[rounds.length-1].totalContribution} participants={rounds[rounds.length-1].totalParticipants} />
           </Grid>
         )
         }
@@ -79,11 +93,11 @@ const BitRoundInfo = ({
             Past Rounds
           </Typography>
           {pastRoundEndTime ? (rounds.map((round, index) => (
-            <RoundSummaryCard key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
+            <RoundSummaryCard symbol = {symbol} key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
           ))
           ) : (
             rounds.slice(0, -1).map((round, index) => (
-              <RoundSummaryCard key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
+              <RoundSummaryCard symbol = {symbol} key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
             ))
           )}
         </Grid>
@@ -93,7 +107,7 @@ const BitRoundInfo = ({
             <RequestSummaryCard key={index} index={index} description={request.description} 
             value={request.value} recipient={request.recipient} complete={request.complete}
             approvalCount={request.approvalCount} refuseCount={request.refuseCount} totalInvestment={totalInvestment}
-            roundEndTime={request.roundEndTime} address={address}/>
+            roundEndTime={request.roundEndTime} address={address} symbol = {symbol}/>
           ))}
         </Grid>
       </Grid>
