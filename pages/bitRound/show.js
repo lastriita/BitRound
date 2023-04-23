@@ -9,14 +9,19 @@ class CampaignShow extends Component {
         const {address} = props.query
         const campaign = BitRound(address);
         const summary = await campaign.methods.getSummary().call();
+        const requestCount = await campaign.methods.getRequestsCount().call();
 
-        const requests = await Promise.all(
+        const rounds = await Promise.all(
             Array(parseInt(summary[4])).fill().map(async (element, index) => {
-                console.log(1)
                 return campaign.methods.rounds(index+1).call()
             })
         )
-        console.log(requests)
+
+        const requests = await Promise.all(
+            Array(parseInt(requestCount)).fill().map((element, index) => {
+                return campaign.methods.requests(index).call()
+            })
+        )
 
         return {
             manager: summary[5],
@@ -25,12 +30,13 @@ class CampaignShow extends Component {
             minInvestment: summary[1],
             totalInvestment: summary[0],
             title: 'BitRound Example',
-            rounds: requests,
+            rounds: rounds,
+            address: address,
+            requests: requests
           };
     }
 
     getInfo() {
-        console.log(this.props)
         return <BitRoundInfo {...this.props} />
     }
 

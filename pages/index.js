@@ -43,7 +43,7 @@ class BitRoundIndex extends Component {
                 roundNumber: bitRound.roundNumber,
                 token: bitRound.token
             }
-            return <Link route={`/bitRound/${bitRound.address}`}><CampaignCard color="primary" key={index} {...item} /></Link>
+            return <Link route={`/bitRound/${bitRound.address}`}><CampaignCard key={index} {...item} /></Link>
         });
 
         return items
