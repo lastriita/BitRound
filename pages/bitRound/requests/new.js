@@ -24,7 +24,6 @@ class RequestNew extends Component {
 
     onSubmit = async (event) => {
         event.preventDefault();
-        console.log(this.props.address)
         const campaign = bitRound(this.props.address);
 
         this.setState({ loading: true, errorMessage: '' });

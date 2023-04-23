@@ -66,7 +66,7 @@ const RequestsTitle = (address) => {
           </Title>
           
             <Octagon>
-            <Link route={`/bitround/${address}/new-request`}>
+            <Link route={`/bitround/${address.address}/request`}>
               <OctagonButton onClick={() => console.log('Octagon button clicked')}>
                   <RotatedAddIcon/>
               </OctagonButton>
