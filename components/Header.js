@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/system';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme2.js';
+import { Link } from '../routes'
 
 const HeaderContainer = styled(AppBar)`
   background-color: #2d82b5;
@@ -62,11 +63,14 @@ const Header = () => {
           <Title variant="h6">
             Create a New BitRound
           </Title>
-          <Octagon>
-            <OctagonButton onClick={() => console.log('Octagon button clicked')}>
-                <RotatedAddIcon/>
-            </OctagonButton>
-          </Octagon>
+          
+            <Octagon>
+            <Link to="/new">
+              <OctagonButton onClick={() => console.log('Octagon button clicked')}>
+                  <RotatedAddIcon/>
+              </OctagonButton>
+            </Link>
+            </Octagon>
         </Toolbar>
       </HeaderContainer>
     </ThemeProvider>

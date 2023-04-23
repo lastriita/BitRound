@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, ThemeProvider, Typography } from '@mui/material';
 import RoundSummaryCard from './RoundSummaryCard';
 import ContributeCard from './ContributeCard';
 import AddressCard from './checkBalanceCard';
 import RequestSummaryCard from './RequestSummaryCard';
 import NewRoundCard from './NewRound';
+import theme from './theme';
 
 function unixToHumanReadable(unixTimestamp) {
   console.log(unixTimestamp)
@@ -30,44 +31,60 @@ const BitRoundInfo = ({
   roundEndTime
 }) => {
   const [humanTime, setHumanTime] = useState('');
+  const [pastRoundEndTime, setPastTime] = useState(false);
 
   useEffect(() => {
     setHumanTime(unixToHumanReadable(roundEndTime));
+    setPastTime(isRoundEndTimePast(roundEndTime));
   }, [roundEndTime]);
 
   return (
     <Container>
       <Grid container spacing={3}>
-        <Grid item xs={7}>
-          <Typography variant="h4" component="div" gutterBottom>
-            {title}
-          </Typography>
-          <Typography>Manager Address: {manager}</Typography>
-          <Typography>Contract Address: {contract}</Typography>
-          <Typography>Token Address: {token}</Typography>
-          <Typography>Minimum Investment: {minInvestment}</Typography>
-          <Typography>Total Investment: {totalInvestment}</Typography>
-          <Typography>Current Round ends: {humanTime}</Typography>
-        </Grid>
+        <ThemeProvider theme={theme}>
+          <Grid item xs={7}>
+            <Typography variant="h1" component="div" gutterBottom>
+              {title}
+            </Typography>
+            <Typography>Manager Address: {manager}</Typography>
+            <Typography>Contract Address: {contract}</Typography>
+            <Typography>Token Address: {token}</Typography>
+            <Typography>Minimum Investment: {minInvestment}</Typography>
+            <Typography>Total Investment: {totalInvestment}</Typography>
+            <Typography>Current Round ends: {humanTime}</Typography>
+          </Grid>
+        </ThemeProvider>
         <Grid item xs={5}>
           <ContributeCard address={address} />
         </Grid>
-        <Grid item xs={12}>
-          <AddressCard />
-        </Grid>
+        {pastRoundEndTime ? (
+          <Grid item xs={12}>
+            <Typography variant="h5" component="div" gutterBottom>
+              Create New Round
+            </Typography>
+            <NewRoundCard address={address} />
+          </Grid>
+        ): (
+          <Grid item xs={12}>
+            <Typography variant="h5" component="div" gutterBottom>
+              Current Round
+            </Typography>
+            <RoundSummaryCard roundNumber={rounds.length} contribution={rounds[rounds.length-1].totalContribution} participants={rounds[rounds.length-1].totalParticipants} />
+          </Grid>
+        )
+        }
         <Grid item xs={12}>
           <Typography variant="h5" component="div" gutterBottom>
-            Create New Round
+            Past Rounds
           </Typography>
-          <NewRoundCard address={address} />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" component="div" gutterBottom>
-            Round Summaries
-          </Typography>
-          {rounds.map((round, index) => (
+          {pastRoundEndTime ? (rounds.map((round, index) => (
             <RoundSummaryCard key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
-          ))}
+          ))
+          ) : (
+            rounds.slice(0, -1).map((round, index) => (
+              <RoundSummaryCard key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
+            ))
+          )}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" component="div" gutterBottom>

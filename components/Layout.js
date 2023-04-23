@@ -18,6 +18,8 @@ const Layout = (props) => {
             flexDirection: 'column', // Stack elements vertically
             alignItems: 'center', // Center elements horizontally
             justifyContent: 'center', // Center elements vertically
+            paddingTop: '5rem', // Add space at the top
+            paddingBottom: '5rem', // Add space at the bottom
           }}
         >
             <Container>

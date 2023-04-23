@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, TextField, Box } from '@mui/material';
+import { Card, CardContent, TextField, Box, Grid, Container } from '@mui/material';
 import { styled } from '@mui/system';
 import factory from '../ethereum/factory';
 import web3 from '../ethereum/web3';
-import { Button, Message } from 'semantic-ui-react';
+import { Button, Message, Form } from 'semantic-ui-react';
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -27,6 +27,7 @@ const NewRoundCard = ({address}) => {
     setError('')
     setSuccess(false)
     console.log(address)
+    console.log(duration)
 
     try{
         const accounts = await web3.eth.getAccounts();
@@ -35,7 +36,7 @@ const NewRoundCard = ({address}) => {
             gas: "3000000"
         })
 
-        setSuccess(true)
+        window.location.reload();
     } catch(err) {
         setLoading(false)
         setError(err.message)
@@ -46,8 +47,7 @@ const NewRoundCard = ({address}) => {
 
   return (
     <StyledCard>
-        <Form error= {!!errorMessage} success = {success}>
-      <CardContent>
+      <CardContent style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: 'column', flexGrow: 1 }}>
         <TextField
           label="Duration in Days"
           type="number"
@@ -56,15 +56,19 @@ const NewRoundCard = ({address}) => {
           onChange={handleChange}
           inputProps={{ min: 1 }}
         />
-      </CardContent>
-      <Box marginRight="16px">
-        <Button loading={loading} variant="contained" color="blue" onClick={handleClick}>
-        Create
-        </Button>
-      </Box>
-        <Message error header="Ooops!" content= {errorMessage}></Message>
-        <Message success color='green' header="Congrats!" content= "Transaccion finalizada con éxito!"></Message>
+            <Box marginTop={2} marginRight="10px" justifyContent="flex-end">
+            <Button loading={loading} variant="contained" color="blue" onClick={handleClick}>
+            Create
+            </Button>
+            
+            </Box>
+            </CardContent>
+      <Form error= {!!errorMessage} success = {success}>
+            <Message error header="Ooops!" content= {errorMessage}></Message>
+            <Message success color='green' header="Congrats!" content= "Transaccion finalizada con éxito!"></Message>
         </Form>
+        
+        
     </StyledCard>
   );
 };
