@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardContent, Typography, CircularProgress, Box, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import bitRound from '../ethereum/bitRound';
+import factory from '../ethereum/factory';
 import web3 from '../ethereum/web3';
 
 const CircularProgressWithLabel = (props) => (
@@ -87,10 +88,10 @@ class RequestSummaryCard extends Component {
   }
 
   onFinalize = async () => {
-      const campaign = bitRound(this.props.address);
+      const campaign = factory;
 
       const accounts = await web3.eth.getAccounts();
-      await campaign.methods.finalizeRequest(this.props.index).send({
+      await campaign.methods.withdrawTokens(this.props.address, this.props.index).send({
           from: accounts[0],
           gas: "3000000"
       })

@@ -32,7 +32,8 @@ class CampaignShow extends Component {
             title: 'BitRound Example',
             rounds: rounds,
             address: address,
-            requests: requests
+            requests: requests,
+            roundEndTime: summary[3]
           };
     }
 

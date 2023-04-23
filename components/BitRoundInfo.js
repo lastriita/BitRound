@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Grid, Typography } from '@mui/material';
 import RoundSummaryCard from './RoundSummaryCard';
 import ContributeCard from './ContributeCard';
 import AddressCard from './checkBalanceCard';
 import RequestSummaryCard from './RequestSummaryCard';
+import NewRoundCard from './NewRound';
+
+function unixToHumanReadable(unixTimestamp) {
+  console.log(unixTimestamp)
+  const date = new Date(unixTimestamp * 1000);
+  return date.toLocaleString();
+}
+
+function isRoundEndTimePast(roundEndTime) {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return roundEndTime < currentTime;
+}
 
 const BitRoundInfo = ({
   manager,
@@ -14,8 +26,15 @@ const BitRoundInfo = ({
   title,
   rounds,
   address,
-  requests
+  requests,
+  roundEndTime
 }) => {
+  const [humanTime, setHumanTime] = useState('');
+
+  useEffect(() => {
+    setHumanTime(unixToHumanReadable(roundEndTime));
+  }, [roundEndTime]);
+
   return (
     <Container>
       <Grid container spacing={3}>
@@ -28,12 +47,19 @@ const BitRoundInfo = ({
           <Typography>Token Address: {token}</Typography>
           <Typography>Minimum Investment: {minInvestment}</Typography>
           <Typography>Total Investment: {totalInvestment}</Typography>
+          <Typography>Current Round ends: {humanTime}</Typography>
         </Grid>
         <Grid item xs={5}>
           <ContributeCard address={address} />
         </Grid>
         <Grid item xs={12}>
           <AddressCard />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" component="div" gutterBottom>
+            Create New Round
+          </Typography>
+          <NewRoundCard address={address} />
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" component="div" gutterBottom>
