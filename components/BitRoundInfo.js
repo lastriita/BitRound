@@ -6,6 +6,7 @@ import AddressCard from './checkBalanceCard';
 import RequestSummaryCard from './RequestSummaryCard';
 import NewRoundCard from './NewRound';
 import theme from './theme';
+import RequestsTitle from './RequestsTitle';
 
 function unixToHumanReadable(unixTimestamp) {
   console.log(unixTimestamp)
@@ -57,7 +58,7 @@ const BitRoundInfo = ({
         <Grid item xs={5}>
           <ContributeCard address={address} />
         </Grid>
-        {pastRoundEndTime ? (
+        {(pastRoundEndTime || rounds.length==0) ? (
           <Grid item xs={12}>
             <Typography variant="h5" component="div" gutterBottom>
               Create New Round
@@ -87,9 +88,7 @@ const BitRoundInfo = ({
           )}
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h5" component="div" gutterBottom>
-            Requests
-          </Typography>
+          <RequestsTitle address={address}></RequestsTitle>
           {requests.map((request, index) => (
             <RequestSummaryCard key={index} index={index} description={request.description} 
             value={request.value} recipient={request.recipient} complete={request.complete}

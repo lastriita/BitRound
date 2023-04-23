@@ -38,7 +38,7 @@ function isRoundEndTimePast(roundEndTime) {
 }
 
 const StyledCard = styled(Card)(({ complete, pastRoundEndTime }) => ({
-  marginBottom: '16px',
+  marginBottom: '20px',
   backgroundColor: complete
     ? 'rgba(76, 175, 80, 0.5)'
     : pastRoundEndTime
@@ -46,7 +46,13 @@ const StyledCard = styled(Card)(({ complete, pastRoundEndTime }) => ({
     : 'white',
   display: 'flex',
   justifyContent: 'space-between',
+  clipPath: 'polygon( 0% 15px, 15px 0%, calc(100% - 15px) 0%, 100% 10px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0% calc(100% - 15px))',
+  padding: '0.3rem',
 }));
+
+const CardOuterContainer = styled('div')`
+filter: drop-shadow(-5px 10px 5px rgba(0, 0, 0, 0.15));
+`;
 
 class RequestSummaryCard extends Component {
   constructor(props) {
@@ -106,6 +112,7 @@ class RequestSummaryCard extends Component {
     const {completed, humanTime} = this.state
     
     return (
+      <CardOuterContainer>
       <StyledCard complete={complete} pastRoundEndTime={pastRoundEndTime}>
         <CardContent>
           <Typography variant="h6" component="div">
@@ -135,6 +142,7 @@ class RequestSummaryCard extends Component {
           </Box>
         ) : null}
       </StyledCard>
+      </CardOuterContainer>
     );
   }
 }

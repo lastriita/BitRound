@@ -3,12 +3,28 @@ import { Card, CardContent, TextField, Box, Grid, Container } from '@mui/materia
 import { styled } from '@mui/system';
 import factory from '../ethereum/factory';
 import web3 from '../ethereum/web3';
-import { Button, Message, Form } from 'semantic-ui-react';
+import { Button, Message, Form, Input } from 'semantic-ui-react';
 
 const StyledCard = styled(Card)`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem;
+        clip-path: polygon(
+          0% 15px,
+          15px 0%,
+          calc(100% - 15px) 0%,
+          100% 10px,
+          100% calc(100% - 15px),
+          calc(100% - 15px) 100%,
+          15px 100%,
+          0% calc(100% - 15px)
+          );
+        background-color: #88cdf6
+`;
+
+const CardOuterContainer = styled('div')`
+  filter: drop-shadow(-5px 10px 5px rgba(0, 0, 0, 0.15));
 `;
 
 const NewRoundCard = ({address}) => {
@@ -23,7 +39,7 @@ const NewRoundCard = ({address}) => {
 
   const handleClick = async (event) => {
     event.preventDefault();
-    setLoading(false)
+    setLoading(true)
     setError('')
     setSuccess(false)
     console.log(address)
@@ -46,30 +62,34 @@ const NewRoundCard = ({address}) => {
   };
 
   return (
+    <CardOuterContainer>
     <StyledCard>
       <CardContent style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: 'column', flexGrow: 1 }}>
-        <TextField
-          label="Duration in Days"
-          type="number"
-          variant="outlined"
-          value={duration}
-          onChange={handleChange}
-          inputProps={{ min: 1 }}
-        />
+        <Form error= {!!errorMessage} success = {success}>
+            <Form.Field>
+                    <label>Create New Round</label>
+                    <Input
+                    label="Duration in Days" 
+                    labelPosition="right" 
+                    onChange={handleChange}
+                    />
+            </Form.Field>
             <Box marginTop={2} marginRight="10px" justifyContent="flex-end">
             <Button loading={loading} variant="contained" color="blue" onClick={handleClick}>
             Create
             </Button>
             
             </Box>
-            </CardContent>
-      <Form error= {!!errorMessage} success = {success}>
+            
+      
             <Message error header="Ooops!" content= {errorMessage}></Message>
             <Message success color='green' header="Congrats!" content= "Transaccion finalizada con éxito!"></Message>
         </Form>
+      </CardContent>
         
         
     </StyledCard>
+    </CardOuterContainer>
   );
 };
 

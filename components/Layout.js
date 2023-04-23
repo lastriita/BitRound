@@ -20,6 +20,7 @@ const Layout = (props) => {
             justifyContent: 'center', // Center elements vertically
             paddingTop: '5rem', // Add space at the top
             paddingBottom: '5rem', // Add space at the bottom
+            paddingLeft: '10rem', paddingRight: '10rem'
           }}
         >
             <Container>
