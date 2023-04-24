@@ -6,6 +6,7 @@ import AddressCard from './checkBalanceCard';
 import RequestSummaryCard from './RequestSummaryCard';
 import NewRoundCard from './NewRound';
 import theme from './theme';
+import theme2 from './theme2';
 import RequestsTitle from './RequestsTitle';
 import tokenI from '../ethereum/token'
 
@@ -39,7 +40,7 @@ const BitRoundInfo = ({
   roundEndTime
 }) => {
   const [humanTime, setHumanTime] = useState('');
-  const [pastRoundEndTime, setPastTime] = useState(false);
+  const [pastroundendtime, setPastTime] = useState(false);
   const [symbol, setSymbol] = useState('');
 
   useEffect(() => {
@@ -55,6 +56,14 @@ const BitRoundInfo = ({
 
   return (
     <Container>
+      <div style={{
+              display: 'flex'
+          }}>
+          <a href="../">
+          <img src="/black.png" alt="Your Logo" className="header-logo" 
+          style={{ marginRight: '10rem', marginBottom: '2rem', width: '20%' }}/>
+          </a>
+      </div>
       <Grid container spacing={3}>
         <ThemeProvider theme={theme}>
           <Grid item xs={7}>
@@ -69,10 +78,11 @@ const BitRoundInfo = ({
             <Typography>Current Round ends: {humanTime}</Typography>
           </Grid>
         </ThemeProvider>
+        <ThemeProvider theme={theme2}>
         <Grid item xs={5}>
           <ContributeCard address={address} token={token} symbol={symbol}/>
         </Grid>
-        {(pastRoundEndTime || rounds.length==0) ? (
+        {(pastroundendtime || rounds.length==0) ? (
           <Grid item xs={12}>
             <Typography variant="h5" component="div" gutterBottom>
               Create New Round
@@ -92,7 +102,7 @@ const BitRoundInfo = ({
           <Typography variant="h5" component="div" gutterBottom>
             Past Rounds
           </Typography>
-          {pastRoundEndTime ? (rounds.map((round, index) => (
+          {pastroundendtime ? (rounds.map((round, index) => (
             <RoundSummaryCard symbol = {symbol} key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
           ))
           ) : (
@@ -110,6 +120,7 @@ const BitRoundInfo = ({
             roundEndTime={request.roundEndTime} address={address} symbol = {symbol}/>
           ))}
         </Grid>
+        </ThemeProvider>
       </Grid>
     </Container>
   );

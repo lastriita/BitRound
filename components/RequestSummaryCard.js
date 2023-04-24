@@ -38,11 +38,11 @@ function isRoundEndTimePast(roundEndTime) {
   return roundEndTime < currentTime;
 }
 
-const StyledCard = styled(Card)(({ complete, pastRoundEndTime }) => ({
+const StyledCard = styled(Card)(({ complete, pastroundendtime }) => ({
   marginBottom: '20px',
   backgroundColor: complete
     ? 'rgba(76, 175, 80, 0.5)'
-    : pastRoundEndTime
+    : pastroundendtime
     ? 'rgba(255, 0, 0, 0.5)'
     : 'white',
   display: 'flex',
@@ -59,7 +59,7 @@ class RequestSummaryCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pastRoundEndTime: false,
+      pastroundendtime: false,
       completed: false,
       humanTime: '',
       loading: false
@@ -69,7 +69,7 @@ class RequestSummaryCard extends Component {
   componentDidMount() {
     const currentTime = Math.floor(Date.now() / 1000);
     const humanTime = unixToHumanReadable(this.props.roundEndTime)
-    this.setState({ pastRoundEndTime: this.props.roundEndTime < currentTime, completed: this.props.complete, humanTime: humanTime });
+    this.setState({ pastroundendtime: this.props.roundEndTime < currentTime, completed: this.props.complete, humanTime: humanTime });
   }
 
   onApprove = async () => {
@@ -116,14 +116,14 @@ class RequestSummaryCard extends Component {
   render() {
     const { index, description, value, recipient, complete, approvalCount, refuseCount, totalInvestment, roundEndTime } = this.props;
 
-    const pastRoundEndTime = isRoundEndTimePast(roundEndTime);
+    const pastroundendtime = isRoundEndTimePast(roundEndTime);
     const approvalPercentage = totalInvestment > 0 ? (parseInt(approvalCount) / totalInvestment) * 100 : 0;
     const refusePercentage = totalInvestment > 0 ? (parseInt(refuseCount) / totalInvestment) * 100 : 0;
     const {completed, humanTime} = this.state
     
     return (
       <CardOuterContainer>
-      <StyledCard complete={complete} pastRoundEndTime={pastRoundEndTime}>
+      <StyledCard complete={complete} pastroundendtime={pastroundendtime}>
         <CardContent>
           <Typography variant="h6" component="div">
             Request {index + 1}
@@ -132,7 +132,7 @@ class RequestSummaryCard extends Component {
           <Typography color="text.secondary">Total Spending: {value} {this.props.symbol}</Typography>
           <Typography color="text.secondary">Recipient: {recipient}</Typography>
 
-          {(!pastRoundEndTime  && !completed) ? (
+          {(!pastroundendtime  && !completed) ? (
             <div>
               <Button onClick={this.onApprove} loading={this.state.loading} variant="contained" color="green" sx={{ marginTop: '8px' }}>Approve</Button>
               <Button onClick={this.onRefuse} loading={this.state.loading} variant="contained" color="red" sx={{ marginTop: '8px', marginLeft: '8px' }}>Refuse</Button>
@@ -140,8 +140,8 @@ class RequestSummaryCard extends Component {
           ) : null}
           
           <Typography variant="h6" fontWeight="bold" color="text.secondary" sx={{ marginTop: '8px' }}>Request End Time: {humanTime}</Typography>
-          {(!pastRoundEndTime  && !completed) ? (
-            <Button onClick={this.onFinalize} loading={this.state.loading} variant="contained" color="primary" sx={{ marginTop: '8px' }}>Finalize Request</Button>
+          {(!pastroundendtime  && !completed) ? (
+            <Button onClick={this.onFinalize} loading={this.state.loading} variant="contained" sx={{ marginTop: '8px' }}>Finalize Request</Button>
           ) : null}
         </CardContent>
         {!completed ? (

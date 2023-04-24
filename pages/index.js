@@ -3,6 +3,7 @@ import factory from '../ethereum/factory';import
 Layout from "../components/Layout";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme.js';
+import theme2 from '../components/theme2.js';
 import CampaignCard from '../components/CardRound';
 import BitRound from "../ethereum/bitRound";
 import { Typography } from '@mui/material';
@@ -43,7 +44,7 @@ class BitRoundIndex extends Component {
                 roundNumber: bitRound.roundNumber,
                 token: bitRound.token
             }
-            return <Link route={`/bitRound/${bitRound.address}`}><CampaignCard key={index} {...item} /></Link>
+            return <Link key={bitRound.address} route={`/bitRound/${bitRound.address}`}><CampaignCard key={bitRound.address} {...item} /></Link>
         });
 
         return items
@@ -54,12 +55,28 @@ class BitRoundIndex extends Component {
         return (
             <ThemeProvider theme={theme}>
                 <Layout>
-                <ThemeProvider theme={theme}>
-                    <Typography variant="h2" component="h1" gutterBottom>
-                    Welcome to BitRound
-                    </Typography>
-                </ThemeProvider>
+                
                 <Container>
+                    <div style={{
+                            display: 'flex'
+                        }}>
+                        <a href="./">
+                        <img src="/black.png" alt="Your Logo" className="header-logo" 
+                        style={{ marginRight: '10rem', marginBottom: '2rem', width: '20%' }}/>
+                        </a>
+                    </div>
+                    <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                        <ThemeProvider theme={theme2}>
+                            <Typography variant="h2" component="h1" gutterBottom
+                            style={{ marginBottom: '1rem' }}>
+                                Welcome to BitRound!
+                            </Typography>
+                        </ThemeProvider>
+                    </div>
                     <Header></Header>
                         <div>
                             {this.renderCampaigns()}
