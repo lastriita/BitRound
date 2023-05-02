@@ -7,36 +7,36 @@ const CardOuterContainer = styled('div')`
 `;
 
 const StyledCard = styled(Card)`
-  clip-path: polygon(
-  0% 10px,
-  10px 0%,
-  calc(100% - 10px) 0%,
+clip-path: polygon(
+  0% 15px,
+  15px 0%,
+  calc(100% - 15px) 0%,
   100% 10px,
-  100% calc(100% - 10px),
-  calc(100% - 10px) 100%,
-  10px 100%,
-  0% calc(100% - 10px)
+  100% calc(100% - 15px),
+  calc(100% - 15px) 100%,
+  15px 100%,
+  0% calc(100% - 15px)
   );
 `;
 //background-color: #120a8f; // Marine blue color
 
 const StyledBox = styled(Box)`
-  clip-path: polygon(
-  0% 10px,
-  10px 0%,
-  calc(100% - 10px) 0%,
+clip-path: polygon(
+  0% 15px,
+  15px 0%,
+  calc(100% - 15px) 0%,
   100% 10px,
-  100% calc(100% - 10px),
-  calc(100% - 10px) 100%,
-  10px 100%,
-  0% calc(100% - 10px)
+  100% calc(100% - 15px),
+  calc(100% - 15px) 100%,
+  15px 100%,
+  0% calc(100% - 15px)
   );
 `;
 
 const CampaignCard = ({ title, minInvestment, totalInvestment, address, roundNumber, token }) => {
   return (
     <CardOuterContainer>
-    <StyledBox boxShadow={6} margin={2}>
+    <StyledBox boxShadow={6} margin={1} marginBottom={2} marginTop={2}>
       <StyledCard>
         <CardContent>
           <Typography variant="h5" component="div">

@@ -10,6 +10,16 @@ const HeaderContainer = styled(AppBar)`
   background-color: #2d82b5;
   box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.3);
   border-radius: 15px;
+  clip-path: polygon(
+    0% 15px,
+    15px 0%,
+    calc(100% - 15px) 0%,
+    100% 10px,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    15px 100%,
+    0% calc(100% - 15px)
+    );
 `;
 
 const Title = styled(Typography)`
