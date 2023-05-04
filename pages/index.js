@@ -57,14 +57,7 @@ class BitRoundIndex extends Component {
                 <Layout>
                 
                 <Container>
-                    <div style={{
-                            display: 'flex'
-                        }}>
-                        <a href="./">
-                        <img src="/black.png" alt="Your Logo" className="header-logo" 
-                        style={{ marginRight: '10rem', marginBottom: '2rem', width: '20%' }}/>
-                        </a>
-                    </div>
+                    
                     <div style={{
                             display: 'flex',
                             justifyContent: 'center',

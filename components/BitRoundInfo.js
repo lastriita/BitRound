@@ -56,14 +56,6 @@ const BitRoundInfo = ({
 
   return (
     <Container>
-      <div style={{
-              display: 'flex'
-          }}>
-          <a href="../">
-          <img src="/black.png" alt="Your Logo" className="header-logo" 
-          style={{ marginRight: '10rem', marginBottom: '2rem', width: '20%' }}/>
-          </a>
-      </div>
       <Grid container spacing={3}>
         <ThemeProvider theme={theme}>
           <Grid item xs={7}>

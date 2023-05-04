@@ -8,6 +8,7 @@ import { Router } from '../routes';
 class CampaignNew extends Component {
     state = {
         minimumContribution: '',
+        name: '',
         tokenAddress: '',
         errorMessage: '',
         loading: false
@@ -21,7 +22,7 @@ class CampaignNew extends Component {
         try {
             const accounts = await web3.eth.getAccounts();
             await factory.methods
-                .createBitRound(this.state.tokenAddress, this.state.minimumContribution)
+                .createBitRound(this.state.tokenAddress, this.state.minimumContribution, this.state.name)
                 .send({
                     from: accounts[0]
                 });
@@ -39,6 +40,14 @@ class CampaignNew extends Component {
             <Layout>
                 <h1>Create BitRound</h1>
                 <Form onSubmit={this.onSubmit} error = {!!this.state.errorMessage}>
+                    <Form.Field>
+                        <label>Name</label>
+                        <Input 
+                        value={this.state.name}
+                        onChange={event =>
+                            this.setState({name: event.target.value})}
+                        />
+                    </Form.Field>
                     <Form.Field>
                         <label>Token Address</label>
                         <Input 
