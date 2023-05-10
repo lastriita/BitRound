@@ -11,6 +11,7 @@ import { Button } from "semantic-ui-react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Grid } from "@mui/material";
 import Web3 from "web3";
+import { Link } from "../routes";
 
 
 const Layout = (props) => {
@@ -100,10 +101,11 @@ const Layout = (props) => {
                     }}
                 >
                     {!connected ? (
-                    <Button variant="contained" color="primary" onClick={connectToMetaMask}>
+                    <Button variant="contained" color="blue" onClick={connectToMetaMask}>
                         Login
                     </Button>
                     ) : (
+                    <Link route={`/portfolio`}>
                     <div
                         style={{
                           clipPath: `polygon(
@@ -127,6 +129,7 @@ const Layout = (props) => {
                         />
                         <span>{address}</span>
                       </div>
+                      </Link>
                     )}
                 </Grid>
                 </Grid>

@@ -40,9 +40,9 @@ function isRoundEndTimePast(roundEndTime) {
 
 const StyledCard = styled(Card)(({ complete, pastroundendtime }) => ({
   marginBottom: '20px',
-  backgroundColor: complete
+  backgroundColor: complete === "true"
     ? 'rgba(76, 175, 80, 0.5)'
-    : pastroundendtime
+    : pastroundendtime === "true"
     ? 'rgba(255, 0, 0, 0.5)'
     : 'white',
   display: 'flex',
@@ -123,7 +123,7 @@ class RequestSummaryCard extends Component {
     
     return (
       <CardOuterContainer>
-      <StyledCard complete={complete} pastroundendtime={pastroundendtime}>
+      <StyledCard complete={complete.toString()} pastroundendtime={pastroundendtime.toString()}>
         <CardContent>
           <Typography variant="h6" component="div">
             Request {index + 1}

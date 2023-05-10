@@ -21,13 +21,13 @@ class CampaignNew extends Component {
 
         try {
             const accounts = await web3.eth.getAccounts();
-            await factory.methods
+            const res = await factory.methods
                 .createBitRound(this.state.tokenAddress, this.state.minimumContribution, this.state.name)
                 .send({
                     from: accounts[0]
                 });
-            
-            Router.pushRoute('/')
+            //console.log(res.events[0].address)
+            Router.pushRoute(`/bitRound/${res.events.BitRoundCreated.returnValues.bitRound}`)
         } catch (err) {
             this.setState({ errorMessage: err.message })
         }
