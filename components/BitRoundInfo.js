@@ -9,6 +9,21 @@ import theme from './theme';
 import theme2 from './theme2';
 import RequestsTitle from './RequestsTitle';
 import tokenI from '../ethereum/token'
+import { useQuery, gql } from "@apollo/client";
+import client from '../ethereum/apollo';
+
+const TOP_INVESTMENTS_QUERY = gql`
+  query TopInvestments($campaignId: ID!) {
+    campaign(id: $campaignId) {
+        id
+        name
+        creator {
+          id
+        }
+        totalInvestment
+    }
+  }
+`;
 
 function unixToHumanReadable(unixTimestamp) {
   const date = new Date(unixTimestamp * 1000);
@@ -42,6 +57,7 @@ const BitRoundInfo = ({
   const [humanTime, setHumanTime] = useState('');
   const [pastroundendtime, setPastTime] = useState(false);
   const [symbol, setSymbol] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,20 +70,31 @@ const BitRoundInfo = ({
     fetchData();
   }, [roundEndTime, token]);
 
+  const { loading, error, data } = useQuery(TOP_INVESTMENTS_QUERY, {
+    variables: { campaignId: address.toLowerCase() },
+    client
+  });
+
+  useEffect(() => {
+    if(data){
+      setName(data.campaign.name)
+      console.log(data.campaign.name)
+    }
+  }, [data]);
+
   return (
     <Container>
       <Grid container spacing={3}>
         <ThemeProvider theme={theme}>
           <Grid item xs={7}>
-            <Typography variant="h1" component="div" gutterBottom>
-              {title}
+            <Typography variant="h1">
+              {name}
             </Typography>
             <Typography>Manager Address: {manager}</Typography>
             <Typography>Contract Address: {contract}</Typography>
             <Typography>Token Address: {token}</Typography>
             <Typography>Minimum Investment: {minInvestment}</Typography>
-            <Typography>Total Investment: {totalInvestment}</Typography>
-            <Typography>Current Round ends: {humanTime}</Typography>
+            <Typography>Total Investment: {totalInvestment} {symbol}</Typography>
           </Grid>
         </ThemeProvider>
         <ThemeProvider theme={theme2}>
@@ -87,6 +114,7 @@ const BitRoundInfo = ({
               Current Round
             </Typography>
             <RoundSummaryCard symbol = {symbol} key={rounds.length-1} roundNumber={rounds.length} contribution={rounds[rounds.length-1].totalContribution} participants={rounds[rounds.length-1].totalParticipants} />
+            <Typography>Current Round ends: {humanTime}</Typography>
           </Grid>
         )
         }

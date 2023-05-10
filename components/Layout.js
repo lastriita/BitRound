@@ -82,7 +82,7 @@ const Layout = (props) => {
 
                 <Grid container spacing={2} alignItems="right" style={{ marginBottom: "2rem" }}>
                 <Grid item xs={6} style={{ textAlign: "left" }}>
-                    <a href="./">
+                    <a href="/">
                     <img
                         src="/black.png"
                         alt="Your Logo"

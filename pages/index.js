@@ -1,63 +1,93 @@
-import { React, Component } from "react";
-import factory from '../ethereum/factory';import 
-Layout from "../components/Layout";
+import React, { useEffect, useState } from 'react';
+import factory from '../ethereum/factory';
+import Layout from "../components/Layout";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme.js';
 import theme2 from '../components/theme2.js';
 import CampaignCard from '../components/CardRound';
 import BitRound from "../ethereum/bitRound";
 import { Typography } from '@mui/material';
-import { Link } from '../routes'
+import { Link } from '../routes';
 import Header from "../components/Header";
 import { Container } from "semantic-ui-react";
+import { useQuery, gql } from "@apollo/client";
+import client from '../ethereum/apollo';
+import Loader from '../components/loading/loading';
+import { styled } from '@mui/system';
 
-class BitRoundIndex extends Component {
-    static async getInitialProps() {
-        const campaigns = await factory.methods.getDeployedCampaigns().call();
-        
-        const items = await Promise.all(
-            campaigns.map(async (address, index) => {
-                const campaign = BitRound(address);
-                const summary = await campaign.methods.getSummary().call();
-                const item = {
-                    title: 'Titulo',
-                    minInvestment: summary[1],
-                    totalInvestment: summary[0],
-                    address: address,
-                    roundNumber: summary[4],
-                    token: summary[6],
-                };
-                return item;
-            })
-        );
+const Wrapper = styled('div')`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+`;
 
-        return { items };
+const TOP_INVESTMENTS_QUERY = gql`
+  query TopInvestments {
+    campaigns(first: 10, orderBy: totalInvestment, orderDirection: desc) {
+        id
+        name
+        creator {
+          id
+        }
+        totalInvestment
     }
+  }
+`;
 
-    renderCampaigns() {
-        const items = this.props.items.map((bitRound, index) => {
+const BitRoundIndex = () => {
+    const { loading, error, data } = useQuery(TOP_INVESTMENTS_QUERY, {
+        client
+    });
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        if(data){
+            const fetchCampaigns = async () => {
+                console.log(data.campaigns)
+                const items = await Promise.all(
+                    data.campaigns.map(async (campaign) => {
+                        const camp1 = BitRound(campaign.id);
+                        const summary = await camp1.methods.getSummary().call();
+                        const item = {
+                            title: campaign.name,
+                            minInvestment: summary[1],
+                            totalInvestment: summary[0],
+                            address: campaign.id,
+                            roundNumber: summary[4],
+                            token: summary[6],
+                        };
+                        return item;
+                    })
+                );
+                setItems(items);
+            }
+            fetchCampaigns();
+        }
+    }, [data]);
+
+    const renderCampaigns = () => {
+        if (loading) {
+            return (<Wrapper><Loader /></Wrapper>);
+        }
+
+        return items.map((bitRound) => {
             const item = {
-                title: 'Titulo',
+                title: bitRound.title,
                 minInvestment: bitRound.minInvestment,
                 totalInvestment: bitRound.totalInvestment,
                 address: bitRound.address,
                 roundNumber: bitRound.roundNumber,
                 token: bitRound.token
-            }
+            };
             return <Link key={bitRound.address} route={`/bitRound/${bitRound.address}`}><CampaignCard key={bitRound.address} {...item} /></Link>
         });
-
-        return items
     }
 
-
-    render() {
-        return (
-            <ThemeProvider theme={theme}>
-                <Layout>
-                
+    return (
+        <ThemeProvider theme={theme}>
+            <Layout>
                 <Container>
-                    
                     <div style={{
                             display: 'flex',
                             justifyContent: 'center',
@@ -72,14 +102,12 @@ class BitRoundIndex extends Component {
                     </div>
                     <Header></Header>
                         <div>
-                            {this.renderCampaigns()}
+                            {renderCampaigns()}
                         </div>
-                        
                 </Container>
-                </Layout>
-            </ThemeProvider>
-        );
-    }
+            </Layout>
+        </ThemeProvider>
+    );
 }
 
 export default BitRoundIndex;
