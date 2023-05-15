@@ -3,7 +3,7 @@ import { Form, Button, Input, Message } from 'semantic-ui-react'
 import Layout from "../../components/Layout";
 import bitRound from "../../ethereum/bitRound";
 import web3 from "../../ethereum/web3";
-import { useRouter } from 'next/router';
+import { Router } from "../../routes";
 import { create } from 'ipfs-http-client';
 
 const projectId = '2PnF9ZfmKuZsPRcqDZqVEruXLz0';
@@ -19,17 +19,12 @@ const client = create({
         authorization: auth
   } });
 
-const EditNew = () => {
+const EditNew = ({address}) => {
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [html, setHtml] = useState(<div/>);
-
-    //const { mutateAsync: upload } = useStorageUpload();
-
-    const router = useRouter();
-    const { address } = router.query;
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -43,11 +38,6 @@ const EditNew = () => {
             const added = await client.add(description);
             console.log('Added file:', added.path);
 
-            /*await campaign.methods
-                .createRequest(description, value)
-                .send({
-                    from: accounts[0]
-                });*/
             let CIDs = {images: [], description: added.path};
             for await (const result of client.addAll(images)) {
                 CIDs.images.push(result.path);
@@ -56,7 +46,14 @@ const EditNew = () => {
             const jsonBuffer = Buffer.from(jsonStr);
             const res = await client.add(jsonBuffer);
             console.log('Added file:', res.path);
-            //router.push(`/bitRound/${address}`);
+
+            await campaign.methods
+                .setInfo(res.path)
+                .send({
+                    from: accounts[0]
+                });
+
+            Router.pushRoute(`/bitRound/${address}`)
         } catch (err) {
             setErrorMessage(err.message);
         }
@@ -108,5 +105,10 @@ const EditNew = () => {
         </Layout>
     );
 }
+
+EditNew.getInitialProps = async (context) => {
+    const { address } = context.query;
+    return { address };
+};
 
 export default EditNew;

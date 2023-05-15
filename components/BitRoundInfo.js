@@ -85,7 +85,8 @@ const BitRoundInfo = ({
   rounds,
   address,
   requests,
-  roundEndTime
+  roundEndTime,
+  cids
 }) => {
   const [humanTime, setHumanTime] = useState('');
   const [pastroundendtime, setPastTime] = useState(false);
@@ -113,7 +114,7 @@ const BitRoundInfo = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = 'https://ipfs.thirdwebcdn.com/ipfs/QmdbB85yEa9MoHpcyX8Ln9meHuhPwW3g9eDGo87KJyD1Bt';
+      const url = 'https://ipfs.thirdwebcdn.com/ipfs/'+cids;
       const response = await fetch(url);
       const jsonData = await response.json();
       
@@ -205,11 +206,11 @@ const BitRoundInfo = ({
         </Typography>
         </Grid>
 
-        <Grid style={{ marginTop: "2rem" }}>
-          <Carousel showThumbs={false} infiniteLoop autoPlay style={{ justifyContent: "center", items: "3" }}>
+        <Grid style={{ marginTop: "2rem" }} item container spacing={0}>
+          <Carousel showThumbs={false} infiniteLoop autoPlay style={{ justifyContent: "center" }}>
           {info.images?.map((imageCID, index) => (
-            <div key={index}>
-              <img src={`https://ipfs.thirdwebcdn.com/ipfs/${imageCID}`} style={{ maxWidth: '600px', height: 'auto' }}/>
+            <div key={index} style={{ width: '100%', height: '500px', overflow: 'hidden' }}>
+              <img src={`https://ipfs.thirdwebcdn.com/ipfs/${imageCID}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }}/>
             </div>
           ))}
           </Carousel>

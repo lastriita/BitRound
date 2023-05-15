@@ -33,7 +33,8 @@ class CampaignShow extends Component {
             rounds: rounds,
             address: address,
             requests: requests,
-            roundEndTime: summary[3]
+            roundEndTime: summary[3],
+            cids: summary[7]
           };
     }
 
