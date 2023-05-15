@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, ThemeProvider, Typography } from '@mui/material';
+import { Container, Grid, ThemeProvider, Typography, IconButton } from '@mui/material';
 import RoundSummaryCard from './RoundSummaryCard';
 import ContributeCard from './ContributeCard';
-import AddressCard from './checkBalanceCard';
 import RequestSummaryCard from './RequestSummaryCard';
 import NewRoundCard from './NewRound';
 import theme from './theme';
@@ -11,6 +10,40 @@ import RequestsTitle from './RequestsTitle';
 import tokenI from '../ethereum/token'
 import { useQuery, gql } from "@apollo/client";
 import client from '../ethereum/apollo';
+import Loader from './loading/loading';
+import { styled } from '@mui/system';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import MiniInfo from './MiniInfo';
+import EditIcon from '@mui/icons-material/Edit';
+import web3Instance from "../ethereum/web3";
+import { Link } from '../routes'
+
+const Wrapper = styled('div')`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+`;
+
+const CarouselCenter = styled('div')`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
+const Image = ({ src }) => {
+  const defaultStyle = {
+    display: 'block',
+    maxWidth: '600px',
+    height: 'auto',
+    float: 'center'
+  };
+
+  return <img src={src} style={{...defaultStyle}} />;
+};
 
 const TOP_INVESTMENTS_QUERY = gql`
   query TopInvestments($campaignId: ID!) {
@@ -58,6 +91,7 @@ const BitRoundInfo = ({
   const [pastroundendtime, setPastTime] = useState(false);
   const [symbol, setSymbol] = useState('');
   const [name, setName] = useState('');
+  const [isManager, setIsManager] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,40 +109,120 @@ const BitRoundInfo = ({
     client
   });
 
+  const [info, setInfo] = useState({});
+
   useEffect(() => {
-    if(data){
+    const fetchData = async () => {
+      const url = 'https://ipfs.thirdwebcdn.com/ipfs/QmdbB85yEa9MoHpcyX8Ln9meHuhPwW3g9eDGo87KJyD1Bt';
+      const response = await fetch(url);
+      const jsonData = await response.json();
+      
+      const descriptionUrl = 'https://ipfs.thirdwebcdn.com/ipfs/' + jsonData.description;
+      const descriptionResponse = await fetch(descriptionUrl);
+      const descriptionData = await descriptionResponse.text(); // Assuming description is plain text
+  
+      setInfo({
+        ...jsonData,
+        description: descriptionData,
+      });
+    };
+  
+    fetchData();
+  }, []);
+  
+
+  useEffect(() => {
+    if(data?.campaign?.name)
       setName(data.campaign.name)
-      console.log(data.campaign.name)
-    }
   }, [data]);
+
+  const handleEditClick = () => {
+    console.log('Edit button clicked');
+  };
+
+  const initMetaMask = async () => {
+    let web3 = web3Instance;
+    const accounts = await web3.eth.getAccounts();
+    if(accounts[0]==manager){
+        setIsManager(true)
+    }
+  }
+
+  useEffect(() => {
+    initMetaMask();
+  }, []);
+
+  //showThumbs={false}
 
   return (
     <Container>
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         <ThemeProvider theme={theme}>
           <Grid item xs={7}>
-            <Typography variant="h1">
-              {name}
-            </Typography>
-            <Typography>Manager Address: {manager}</Typography>
-            <Typography>Contract Address: {contract}</Typography>
-            <Typography>Token Address: {token}</Typography>
-            <Typography>Minimum Investment: {minInvestment}</Typography>
-            <Typography>Total Investment: {totalInvestment} {symbol}</Typography>
+            { loading ? (
+              <Wrapper><Loader /></Wrapper>
+            ) : (
+              <div>
+                <Typography variant="h1">
+                  {name}
+                  {isManager ? (
+                    <Link route={`/bitround/${address}/edit`}>
+                    <IconButton onClick={handleEditClick}>
+                      <EditIcon />
+                    </IconButton>
+                    </Link>
+                  ):(
+                    null
+                  )}
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <MiniInfo title="Minimum Investment" subtitle={minInvestment} />
+                  </Grid>
+                  <Grid item xs={6}>
+                      <MiniInfo title="Total Investment" subtitle={totalInvestment+' '+symbol} />
+                  </Grid>
+                </Grid>
+                <ThemeProvider theme={theme2}>
+                
+                </ThemeProvider>
+              </div>
+            )
+            }
           </Grid>
         </ThemeProvider>
         <ThemeProvider theme={theme2}>
+        
         <Grid item xs={5}>
           <ContributeCard address={address} token={token} symbol={symbol}/>
         </Grid>
-        {(pastroundendtime || rounds.length==0) ? (
+
+        
+
+        <Grid item container spacing={3}>
+        <Typography margin={3}>
+        {info.description}
+        </Typography>
+        </Grid>
+
+        <Grid style={{ marginTop: "2rem" }}>
+          <Carousel showThumbs={false} infiniteLoop autoPlay style={{ justifyContent: "center", items: "3" }}>
+          {info.images?.map((imageCID, index) => (
+            <div key={index}>
+              <img src={`https://ipfs.thirdwebcdn.com/ipfs/${imageCID}`} style={{ maxWidth: '600px', height: 'auto' }}/>
+            </div>
+          ))}
+          </Carousel>
+        </Grid>
+
+        {isManager && (pastroundendtime || rounds.length==0) ? (
           <Grid item xs={12}>
             <Typography variant="h5" component="div" gutterBottom>
               Create New Round
             </Typography>
             <NewRoundCard address={address} />
           </Grid>
-        ): (
+        ): !isManager && (pastroundendtime || rounds.length==0) ? null : (
           <Grid item xs={12}>
             <Typography variant="h5" component="div" gutterBottom>
               Current Round
@@ -139,6 +253,12 @@ const BitRoundInfo = ({
             approvalCount={request.approvalCount} refuseCount={request.refuseCount} totalInvestment={totalInvestment}
             roundEndTime={request.roundEndTime} address={address} symbol = {symbol}/>
           ))}
+        </Grid>
+        <Grid>
+          <Typography>Ethereum info:</Typography>
+          <Typography>Manager Address: {manager}</Typography>
+          <Typography>Contract Address: {contract}</Typography>
+          <Typography>Token Address: {token}</Typography>
         </Grid>
         </ThemeProvider>
       </Grid>

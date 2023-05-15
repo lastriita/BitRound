@@ -16,27 +16,29 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.1",
+    "@mui/system": "^5.12.3",
     "@openzeppelin/contracts": "^4.8.3",
     "@truffle/hdwallet-provider": "^2.1.7",
+    "ethers": "^5.7.2",
     "fs-extra": "^10.1.0",
     "ganache-cli": "^6.12.2",
     "graphql": "^16.6.0",
+    "ipfs-http-client": "^60.0.0",
     "mocha": "^10.2.0",
     "next": "^13.2.1",
     "next-routes": "^1.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-responsive-carousel": "^3.2.23",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.4",
     "solc": "^0.8.0",
     "web3": "^1.8.2"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-waffle": "^2.0.5",
     "chai": "^4.3.7",
     "ethereum-waffle": "^4.0.10",
-    "ethers": "^6.3.0",
     "hardhat": "^2.14.0"
   }
 }

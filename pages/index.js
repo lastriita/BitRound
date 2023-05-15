@@ -67,10 +67,6 @@ const BitRoundIndex = () => {
     }, [data]);
 
     const renderCampaigns = () => {
-        if (loading) {
-            return (<Wrapper><Loader /></Wrapper>);
-        }
-
         return items.map((bitRound) => {
             const item = {
                 title: bitRound.title,
@@ -101,9 +97,11 @@ const BitRoundIndex = () => {
                         </ThemeProvider>
                     </div>
                     <Header></Header>
-                        <div>
-                            {renderCampaigns()}
-                        </div>
+                    { loading ? (<Wrapper><Loader /></Wrapper>):
+                    (<div>
+                        {renderCampaigns()}
+                    </div>)
+                    }
                 </Container>
             </Layout>
         </ThemeProvider>
