@@ -7,7 +7,6 @@ import theme2 from '../components/theme2.js';
 import CampaignCard from '../components/CardRound';
 import BitRound from "../ethereum/bitRound";
 import { Typography } from '@mui/material';
-import { Link } from '../routes';
 import Header from "../components/Header";
 import { Container } from "semantic-ui-react";
 import { useQuery, gql } from "@apollo/client";
@@ -56,6 +55,7 @@ const BitRoundIndex = () => {
                             address: campaign.id,
                             roundNumber: summary[4],
                             token: summary[6],
+                            cids: summary[7]
                         };
                         return item;
                     })
@@ -74,9 +74,10 @@ const BitRoundIndex = () => {
                 totalInvestment: bitRound.totalInvestment,
                 address: bitRound.address,
                 roundNumber: bitRound.roundNumber,
-                token: bitRound.token
+                token: bitRound.token,
+                cid: bitRound.cids
             };
-            return <Link key={bitRound.address} route={`/bitRound/${bitRound.address}`}><CampaignCard key={bitRound.address} {...item} /></Link>
+            return <CampaignCard key={bitRound.address} {...item} />
         });
     }
 

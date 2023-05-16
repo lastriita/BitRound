@@ -27,7 +27,7 @@ class CampaignNew extends Component {
                     from: accounts[0]
                 });
             //console.log(res.events[0].address)
-            Router.pushRoute(`/bitRound/${res.events.BitRoundCreated.returnValues.bitRound}`)
+            Router.pushRoute(`/bitRound/${res.events.BitRoundCreated.returnValues.bitRound}/edit`)
         } catch (err) {
             this.setState({ errorMessage: err.message })
         }

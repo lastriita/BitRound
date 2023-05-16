@@ -234,17 +234,24 @@ const BitRoundInfo = ({
         )
         }
         <Grid item xs={12}>
-          <Typography variant="h5" component="div" gutterBottom>
-            Past Rounds
-          </Typography>
           {pastroundendtime ? (rounds.map((round, index) => (
+            <div>
+            <Typography variant="h5" component="div" gutterBottom>
+              Past Rounds
+            </Typography>
             <RoundSummaryCard symbol = {symbol} key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
+            </div>
           ))
-          ) : (
-            rounds.slice(0, -1).map((round, index) => (
+          ) : rounds.slice(0, -1).length>0 ? (
+            <div>
+            <Typography variant="h5" component="div" gutterBottom>
+              Past Rounds
+            </Typography>
+            {rounds.slice(0, -1).map((round, index) => (
               <RoundSummaryCard symbol = {symbol} key={index} roundNumber={index + 1} contribution={round.totalContribution} participants={round.totalParticipants} />
-            ))
-          )}
+            ))}
+            </div>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <RequestsTitle address={address}></RequestsTitle>

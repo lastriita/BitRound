@@ -152,6 +152,7 @@ const Portfolio = () => {
                 address: camp.id,
                 roundNumber: summary[4],
                 token: summary[6],
+                cid: summary[7]
             };
             return item;
         })
@@ -163,9 +164,10 @@ const Portfolio = () => {
             totalInvestment: bitRound.totalInvestment,
             address: bitRound.address,
             roundNumber: bitRound.roundNumber,
-            token: bitRound.token
+            token: bitRound.token,
+            cid: bitRound.cid
         }
-        return <Link key={bitRound.address} route={`/bitRound/${bitRound.address}`}><CampaignCard key={bitRound.address} {...item} /></Link>
+        return <CampaignCard key={bitRound.address} {...item} />
     }));
 
     return items2
