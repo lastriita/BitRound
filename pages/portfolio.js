@@ -16,8 +16,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import web3 from "../ethereum/web3";
 
-const TOP_INVESTMENTS_QUERY = gql`
-  query TopInvestments($userId: ID!) {
+const PORTFOLIO_QUERY = gql`
+  query Portfolio($userId: ID!) {
     user(id: $userId) {
       id
       investedCampaigns(first: 10, orderBy: amount, orderDirection: desc) {
@@ -92,7 +92,7 @@ const Portfolio = () => {
     }
   };
 
-  const { loading, error, data } = useQuery(TOP_INVESTMENTS_QUERY, {
+  const { loading, error, data } = useQuery(PORTFOLIO_QUERY, {
     variables: { userId: account },
     client,
     skip: executeQuery,
@@ -103,7 +103,7 @@ const Portfolio = () => {
     if (account) {
         try {
           const { data } = await client.query({
-            query: TOP_INVESTMENTS_QUERY,
+            query: PORTFOLIO_QUERY,
             variables: { userId: account.toLowerCase() },
             skip: executeQuery
           });

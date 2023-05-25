@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, TextField, Box, Grid, Container } from '@mui/material';
 import { styled } from '@mui/system';
-import factory from '../ethereum/factory';
+import bitRound from '../ethereum/bitRound';
 import web3 from '../ethereum/web3';
 import { Button, Message, Form, Input } from 'semantic-ui-react';
 
@@ -46,8 +46,9 @@ const NewRoundCard = ({address}) => {
     console.log(duration)
 
     try{
+        const campaign = bitRound(address);
         const accounts = await web3.eth.getAccounts();
-        await factory.methods.startNewRound(address, duration).send({
+        await campaign.methods.startNewRound(duration).send({
             from: accounts[0],
             gas: "3000000"
         })
