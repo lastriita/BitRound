@@ -19,6 +19,7 @@
     "@mui/system": "^5.12.3",
     "@openzeppelin/contracts": "^4.8.3",
     "@truffle/hdwallet-provider": "^2.1.7",
+    "dotenv": "^16.1.3",
     "ethers": "^5.7.2",
     "fs-extra": "^10.1.0",
     "ganache-cli": "^6.12.2",

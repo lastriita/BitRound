@@ -5,19 +5,10 @@ import bitRound from "../../ethereum/bitRound";
 import web3 from "../../ethereum/web3";
 import { Router } from "../../routes";
 import { create } from 'ipfs-http-client';
+require('dotenv').config();
 
-const projectId = '2PnF9ZfmKuZsPRcqDZqVEruXLz0';
-const projectSecret = '07e8439d94e266c0b186c0fc7158ca47';
-const auth =
-'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64')
-
-const client = create({ 
-    host: 'ipfs.infura.io', 
-    port: 5001, 
-    protocol: 'https',
-    headers: {
-        authorization: auth
-  } });
+const projectId = process.env.REACT_APP_PROJECT_ID;
+const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
 
 const EditNew = ({address}) => {
     const [description, setDescription] = useState('');
@@ -25,6 +16,17 @@ const EditNew = ({address}) => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [html, setHtml] = useState(<div/>);
+
+    const auth =
+    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64')
+
+    const client = create({ 
+        host: 'ipfs.infura.io', 
+        port: 5001, 
+        protocol: 'https',
+        headers: {
+            authorization: 'Basic MlBuRjlaZm1LdVpzUFJjcURacVZFcnVYTHowOjA3ZTg0MzlkOTRlMjY2YzBiMTg2YzBmYzcxNThjYTQ3'
+    } });
 
     const onSubmit = async (event) => {
         event.preventDefault();

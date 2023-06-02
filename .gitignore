@@ -1,6 +1,7 @@
 node_modules
-ethereum
+ethereum/deploy.js
+ethereum/cache
+ethereum/artifacts
 ADDRESS
 .next
-package.json
-package-lock.json
+.env
