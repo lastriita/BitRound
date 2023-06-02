@@ -2,6 +2,7 @@ node_modules
 ethereum/deploy.js
 ethereum/cache
 ethereum/artifacts
+ethereum/bitround
 ADDRESS
 .next
 .env
